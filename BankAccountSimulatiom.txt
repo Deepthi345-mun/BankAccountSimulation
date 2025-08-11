@@ -1,0 +1,151 @@
+import java.util.ArrayList;
+import java.util.InputMismatchException;
+import java.util.Scanner;
+class Account 
+{
+    private String accountHolder;
+    private double balance;
+    private ArrayList<String> transactionHistory;
+    public Account(String accountHolder, double initialBalance)
+    {
+        this.accountHolder = accountHolder;
+        this.balance = initialBalance;
+        this.transactionHistory = new ArrayList<>();
+        transactionHistory.add("Account created with balance: " + initialBalance);
+    }
+    public void deposit(double amount)
+    {
+        if (amount > 0)
+        {
+            balance += amount;
+            transactionHistory.add("Deposited: " + amount + " | Balance: " + balance);
+            System.out.println("Deposit successful! Current Balance: " + balance);
+        }  
+        else
+        {
+            System.out.println("Invalid deposit amount!");
+        }
+    }
+
+    public void withdraw(double amount)
+    {
+        if (amount > 0 && amount <= balance)
+        {
+            balance -= amount;
+            transactionHistory.add("Withdrew: " + amount + " | Balance: " + balance);
+            System.out.println("Withdrawal successful! Current Balance: " + balance);
+        }
+        else 
+        {
+            System.out.println("Invalid or insufficient funds for withdrawal!");
+        }
+    }
+
+    public void showBalance() 
+    {
+        System.out.println("Current Balance: " + balance);
+    }
+
+    public void showTransactionHistory()
+      {
+        System.out.println("\n--- Transaction History ---");
+        for (String record : transactionHistory)
+        {
+            System.out.println(record);
+        }
+        System.out.println("---------------------------");
+    }
+}
+
+public class BankAccountSimulation 
+{
+    public static void main(String[] args) 
+    {
+        Scanner sc = new Scanner(System.in);
+        System.out.print("Enter Account Holder Name: ");
+        String name = sc.nextLine();
+        double initialBalance = getValidDouble(sc, "Enter Initial Balance: ");
+        Account account = new Account(name, initialBalance);
+        int choice;
+        do {
+            System.out.println("\n--- Bank Menu ---");
+            System.out.println("1. Deposit");
+            System.out.println("2. Withdraw");
+            System.out.println("3. Show Balance");
+            System.out.println("4. Show Transaction History");
+            System.out.println("5. Exit");
+            choice = getValidInt(sc, "Enter choice: ");
+            switch (choice)
+            {
+                case 1:
+                    double depositAmt = getValidDouble(sc, "Enter amount to deposit: ");
+                    account.deposit(depositAmt);
+                    break;
+
+                case 2:
+                    double withdrawAmt = getValidDouble(sc, "Enter amount to withdraw: ");
+                    account.withdraw(withdrawAmt);
+                    break;
+
+                case 3:
+                    account.showBalance();
+                    break;
+
+                case 4:
+                    account.showTransactionHistory();
+                    break;
+
+                case 5:
+                    System.out.println("Thank you for banking with us!");
+                    break;
+
+                default:
+                    System.out.println("Invalid choice! Please try again.");
+            }
+        } while (choice != 5);
+
+        sc.close();
+    }
+    private static double getValidDouble(Scanner sc, String prompt)
+   {
+        double value = 0;
+        boolean valid = false;
+        while (!valid)
+        {
+            try 
+           {
+                System.out.print(prompt);
+                value = sc.nextDouble();
+                sc.nextLine();
+                valid = true;
+           } 
+           catch (InputMismatchException e)
+            {
+                System.out.println("Invalid input! Please enter a number.");
+                sc.nextLine(); 
+            }
+        }
+        return value;
+    }
+    private static int getValidInt(Scanner sc, String prompt)
+   {
+        int value = 0;
+        boolean valid = false;
+        while (!valid)
+        {
+            try
+            {
+                System.out.print(prompt);
+                value = sc.nextInt();
+                sc.nextLine(); 
+                valid = true;
+            }
+            catch (InputMismatchException e)
+            {
+                System.out.println("Invalid input! Please enter an integer.");
+                sc.nextLine(); 
+            }
+        }
+        return value;
+    }
+}
